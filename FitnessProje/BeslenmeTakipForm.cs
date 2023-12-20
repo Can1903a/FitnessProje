@@ -15,18 +15,17 @@ namespace FitnessProje
             InitializeComponent();
             database = db;
 
-            // musteriInstance null kontrolü ekleyerek nesnenin oluşturulup oluşturulmadığını kontrol edin.
+            
             musteri = musteriInstance ?? new Musteri(database);
 
-            // Form yüklenirken müşteri bilgilerini göster
             LoadMusteriBilgileri();
-            // Müşteriye ait beslenme bilgilerini yükle
+          
             LoadBeslenmeBilgileri();
         }
 
         private void LoadMusteriBilgileri()
         {
-            // Müşteri bilgilerini göster
+
             labelMusteriAdi.Text = $"Müşteri Adı: {musteri.Ad} {musteri.Soyad}";
             labelMusteriID.Text = $"Müşteri ID: {musteri.MusteriID}";
         }
@@ -35,10 +34,10 @@ namespace FitnessProje
         {
             try
             {
-                // Müşteriye ait beslenme bilgilerini çek
+
                 DataTable beslenmeTable = musteri.GetMusteriBeslenmeBilgileri();
 
-                // DataGridView'a beslenme bilgilerini yükle
+
                 dataGridViewBeslenme.DataSource = beslenmeTable;
             }
             catch (Exception ex)
@@ -51,7 +50,7 @@ namespace FitnessProje
         {
             try
             {
-                // Yeni yemek bilgisi ekleyin
+
                 YemekEkle();
             }
             catch (Exception ex)
@@ -64,10 +63,10 @@ namespace FitnessProje
         {
             using (BeslenmeEkleForm beslenmeEkleForm = new BeslenmeEkleForm(database, musteri))
             {
-                // BeslenmeEkleForm'u açın
+
                 if (beslenmeEkleForm.ShowDialog() == DialogResult.OK)
                 {
-                    // Eğer kullanıcı yeni bir yemek eklediyse, beslenme bilgilerini güncelle
+
                     LoadBeslenmeBilgileri();
                 }
             }

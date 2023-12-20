@@ -15,7 +15,6 @@ namespace FitnessProje
             InitializeComponent();
             database = db;
 
-            // musteriInstance null kontrolü ekleyerek nesnenin oluşturulup oluşturulmadığını kontrol edin.
             musteri = musteriInstance ?? new Musteri(database);
         }
 
@@ -27,7 +26,7 @@ namespace FitnessProje
             {
                 database.OpenConnection(connection);
 
-                // Yeni yemek bilgisi ekleyin
+
                 string query = "INSERT INTO beslenme_bilgileri (MusteriID, YemekAdi, Kalori, Tarih) " +
                                "VALUES (@MusteriID, @YemekAdi, @Kalori, @Tarih)";
 
@@ -44,7 +43,6 @@ namespace FitnessProje
 
             MessageBox.Show("Yemek bilgisi başarıyla eklendi.", "Başarı", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            // Formu kapat
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
@@ -63,7 +61,6 @@ namespace FitnessProje
         {
             try
             {
-                // Yeni yemek bilgisi ekleyin
                 YemekEkle();
             }
             catch (Exception ex)

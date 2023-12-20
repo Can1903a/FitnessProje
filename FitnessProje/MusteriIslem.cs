@@ -15,7 +15,6 @@ namespace FitnessProje
             InitializeComponent();
             database = db;
 
-            // musteriInstance null kontrolü ekleyerek nesnenin oluşturulup oluşturulmadığını kontrol edin.
             musteri = musteriInstance ?? new Musteri(database);
 
         }
@@ -25,10 +24,9 @@ namespace FitnessProje
             try
             {
                 dataGridViewAntrenmanlar.ReadOnly = true;
-                // Müşteriye ait antrenmanları yükle
+
                 LoadMusteriAntrenmanlar();
 
-                // Diğer form yüklenirken yapılacak işlemler...
             }
             catch (Exception ex)
             {
@@ -38,10 +36,10 @@ namespace FitnessProje
 
         private void LoadMusteriAntrenmanlar()
         {
-            // Müşteriye ait antrenmanları getir
+
             DataTable antrenmanlarTable = musteri.GetMusteriAntrenmanlar();
 
-            // DataGridView'e antrenmanları yükle
+
             dataGridViewAntrenmanlar.DataSource = antrenmanlarTable;
 
         }
