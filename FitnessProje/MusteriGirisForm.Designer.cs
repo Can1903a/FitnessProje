@@ -35,10 +35,10 @@
             // 
             // TcTextBox
             // 
-            this.TcTextBox.Location = new System.Drawing.Point(136, 76);
+            this.TcTextBox.Location = new System.Drawing.Point(136, 95);
             this.TcTextBox.Name = "TcTextBox";
             this.TcTextBox.Size = new System.Drawing.Size(131, 20);
-            this.TcTextBox.TabIndex = 0;
+            this.TcTextBox.TabIndex = 3;
             // 
             // SifreTextBox
             // 

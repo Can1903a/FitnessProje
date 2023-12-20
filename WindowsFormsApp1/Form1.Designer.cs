@@ -1,6 +1,6 @@
-﻿namespace Fitness
+﻿namespace WindowsFormsApp1
 {
-    partial class MusteriIslemleriForm
+    partial class Form1
     {
         /// <summary>
         /// Required designer variable.
@@ -28,17 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            // 
-            // MusteriIslemleriForm
-            // 
-            this.ClientSize = new System.Drawing.Size(927, 495);
-            this.Name = "MusteriIslemleriForm";
-            this.Load += new System.EventHandler(this.MusteriIslemleriForm_Load);
-            this.ResumeLayout(false);
-
+            this.components = new System.ComponentModel.Container();
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Text = "Form1";
         }
 
         #endregion
     }
 }
+

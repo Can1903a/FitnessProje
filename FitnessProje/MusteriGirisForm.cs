@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using FitnessProje;
 using Fitness;
-using MySql.Data.MySqlClient;
 
 namespace FitnessProje
 {
@@ -20,36 +18,40 @@ namespace FitnessProje
             musteri = musteriInstance ?? new Musteri(database);
         }
 
-
-
         private void MusteriGirisForm_Load(object sender, EventArgs e)
         {
-
+            // Form yüklenirken yapılacak işlemler
         }
-
-
 
         private void GirisButon2_Click_1(object sender, EventArgs e)
         {
-            // Kullanıcı giriş bilgilerini al
-            string tc = TcTextBox.Text;
-            string sifre = SifreTextBox.Text;
-
-            // Giriş bilgilerini kontrol et
-            if (musteri.GirisYap(tc, sifre))
+            try
             {
-                // Başarılı giriş durumunda ana menüyü aç
-                MusteriIslemleriForm musteriIslemleriForm = new MusteriIslemleriForm(database, musteri);
-                musteriIslemleriForm.Show();
+                // Kullanıcı giriş bilgilerini al
+                string tc = TcTextBox.Text;
+                string sifre = SifreTextBox.Text;
 
-                // Şu anki formu kapat
-                this.Close();
+                // Giriş bilgilerini kontrol et
+                if (musteri.GirisYap(tc, sifre))
+                {
+                    // Başarılı giriş durumunda ana menüyü aç
+                    MusteriIslem musteriIslemleriForm = new MusteriIslem(database, musteri);
+                    musteriIslemleriForm.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    // Hatalı giriş durumunda kullanıcıya bilgi ver
+                    MessageBox.Show("Geçersiz kullanıcı adı veya şifre.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Hatalı giriş durumunda kullanıcıya bilgi ver
-                MessageBox.Show("Geçersiz kullanıcı adı veya şifre.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
     }
 }
+
