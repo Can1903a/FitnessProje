@@ -44,7 +44,7 @@ namespace FitnessProje
             MessageBox.Show("Yemek bilgisi başarıyla eklendi.", "Başarı", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             this.DialogResult = DialogResult.OK;
-            this.Close();
+            
         }
 
         private void BeslenmeEkleForm_Load(object sender, EventArgs e)
@@ -62,6 +62,7 @@ namespace FitnessProje
             try
             {
                 YemekEkle();
+                
             }
             catch (Exception ex)
             {

@@ -11,6 +11,7 @@ namespace Fitness
         private Database database;
         private Yonetici yonetici;
         private Musteri musteri;
+        private Antrenor antrenor;
 
         public FitnessProje()
         {
@@ -40,6 +41,13 @@ namespace Fitness
         {
             MusteriGirisForm musteriGirisForm = new MusteriGirisForm(database, musteri);
             musteriGirisForm.Show();
+            this.Hide();
+        }
+
+        private void Btn_Antrenor_Click(object sender, EventArgs e)
+        {
+            AntrenorGirisForm antrenorGirisForm = new AntrenorGirisForm(database,antrenor);
+            antrenorGirisForm.Show();
             this.Hide();
         }
     }
