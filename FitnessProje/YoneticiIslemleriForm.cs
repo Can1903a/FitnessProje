@@ -9,7 +9,6 @@ namespace Fitness
     {
         private Database database;
         private Yonetici yonetici;
-        private Antrenor antrenor;
 
         public YoneticiIslemleriForm(Database db, Yonetici yoneticiInstance)
         {
@@ -18,11 +17,6 @@ namespace Fitness
             yonetici = yoneticiInstance;
         }
 
-        public YoneticiIslemleriForm(Database database, Antrenor antrenor)
-        {
-            this.database = database;
-            this.antrenor = antrenor;
-        }
 
         private void YoneticiIslemleriForm_Load(object sender, EventArgs e)
         {

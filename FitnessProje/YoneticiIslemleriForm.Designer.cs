@@ -32,7 +32,7 @@
             // 
             // YoneticiIslemleriForm
             // 
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(772, 511);
             this.Name = "YoneticiIslemleriForm";
             this.Load += new System.EventHandler(this.YoneticiIslemleriForm_Load);
             this.ResumeLayout(false);

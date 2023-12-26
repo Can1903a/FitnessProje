@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Windows.Forms;
 
 namespace FitnessProje
 {
@@ -50,6 +51,44 @@ namespace FitnessProje
                 }
             }
         }
+        public bool KayitOl(string ad, string soyad, string tc, string telefon, string email, string adres, string sifre, int yas, decimal boy, decimal kilo)
+        {
+            try
+            {
+                using (MySqlConnection connection = database.GetConnection())
+                {
+                    database.OpenConnection(connection);
+
+                    // Müşteri tablosuna ekleme yap
+                    string query = "INSERT INTO Musteriler (Ad, Soyad, Email, Telefon, Adres, Sifre, Tc, Yas, Boy, Kilo) " +
+                                   "VALUES (@Ad, @Soyad, @Email, @Telefon, @Adres, @Sifre, @Tc, @Yas, @Boy, @Kilo)";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@Ad", ad);
+                        cmd.Parameters.AddWithValue("@Soyad", soyad);
+                        cmd.Parameters.AddWithValue("@Email", tc);
+                        cmd.Parameters.AddWithValue("@Telefon", telefon);
+                        cmd.Parameters.AddWithValue("@Adres", email);
+                        cmd.Parameters.AddWithValue("@Sifre", adres);
+                        cmd.Parameters.AddWithValue("@Tc", sifre);
+                        cmd.Parameters.AddWithValue("@Yas", yas);
+                        cmd.Parameters.AddWithValue("@Boy", boy);
+                        cmd.Parameters.AddWithValue("@Kilo", kilo);
+
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    return true;
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show($"MySQL Hatası: {ex.Message}\nHata Kodu: {ex.ErrorCode}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
         public DataTable GetMusteriBeslenmeBilgileri()
         {
             using (MySqlConnection connection = database.GetConnection())
@@ -74,27 +113,7 @@ namespace FitnessProje
         }
 
 
-        public DataTable GetMusteriAntrenmanlar()
-        {
-            using (MySqlConnection connection = database.GetConnection())
-            {
-                database.OpenConnection(connection);
-
-                string query = "SELECT * FROM antrenmanlar WHERE MusteriID = @MusteriID ORDER BY Tarih ASC";
-                using (MySqlCommand cmd = new MySqlCommand(query, connection))
-                {
-                    cmd.Parameters.AddWithValue("@MusteriID", this.MusteriID);
-
-                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
-                    {
-                        DataTable antrenmanlarTable = new DataTable();
-                        adapter.Fill(antrenmanlarTable);
-
-                        return antrenmanlarTable;
-                    }
-                }
-            }
-        }
+       
     }
 }
 

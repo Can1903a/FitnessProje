@@ -13,12 +13,17 @@ namespace Fitness
         private Musteri musteri;
         private Antrenor antrenor;
 
+        public FitnessProje(Antrenor antrenor)
+        {
+            this.antrenor = antrenor;
+        }
+
         public FitnessProje()
         {
             InitializeComponent();
 
             // MySQL bağlantı bilgilerini buraya ekleyin.
-            string connectionString = "server=localhost;user=root;password=1234;database=Fitness";
+            string connectionString = "server=localhost;user=root;password=12345;database=Fitness";
 
             database = new Database(connectionString);
             yonetici = new Yonetici(database);
@@ -48,6 +53,13 @@ namespace Fitness
         {
             AntrenorGirisForm antrenorGirisForm = new AntrenorGirisForm(database,antrenor);
             antrenorGirisForm.Show();
+            this.Hide();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MusteriKayit musteriKayit = new MusteriKayit(database, musteri);
+            musteriKayit.Show();
             this.Hide();
         }
     }

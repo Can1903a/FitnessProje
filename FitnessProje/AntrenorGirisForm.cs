@@ -1,7 +1,6 @@
-﻿// AntrenorGirisForm formu
-using Fitness;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Fitness;
 
 namespace FitnessProje
 {
@@ -14,36 +13,39 @@ namespace FitnessProje
         {
             InitializeComponent();
             database = db;
+
             antrenor = antrenorInstance ?? new Antrenor(database);
         }
 
-
-      
         private void AntrenorGirisForm_Load(object sender, EventArgs e)
         {
-
         }
 
-        private void GirisButon_Click_1(object sender, EventArgs e)
+        private void antrenorTCTextBox_TextChanged(object sender, EventArgs e)
         {
-            // Kullanıcı giriş bilgilerini al
-            string antrenorTC = antrenorTCTextBox.Text;
-            string antrenorSifre = antrenorSifreTextBox.Text;
+        }
 
-            // Giriş bilgilerini kontrol et
-            if (antrenor.GirisYap(antrenorTC, antrenorSifre))
+        private void GirisButon2_Click(object sender, EventArgs e)
+        {
+            try
             {
-                // Başarılı giriş durumunda ana menüyü aç
-                AntrenorIslemleriForm antrenorIslemleriForm = new AntrenorIslemleriForm(database, antrenor);
-                antrenorIslemleriForm.Show();
+                string antrenorTC = antrenorTCTextBox.Text;
+                string antrenorSifre = antrenorSifreTextBox.Text;
 
-                // Şu anki formu kapat
-                this.Close();
+                if (antrenor.AntrenorGirisYap(antrenorTC, antrenorSifre))
+                {
+                    AntrenorIslemleriForm antrenorIslemleriForm = new AntrenorIslemleriForm(database, antrenor);
+                    antrenorIslemleriForm.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("Geçersiz kullanıcı adı veya şifre.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Hatalı giriş durumunda kullanıcıya bilgi ver
-                MessageBox.Show("Geçersiz kullanıcı adı veya şifre.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

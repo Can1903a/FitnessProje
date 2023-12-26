@@ -1,8 +1,8 @@
-﻿// AntrenorIslemleriForm formu
+﻿// AntrenorIslemleriForm.cs
 using System;
+using System.Data;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using System.Data;
 using Fitness;
 
 namespace FitnessProje
@@ -18,8 +18,8 @@ namespace FitnessProje
             database = db;
             antrenor = antrenorInstance;
 
-            // Form yüklenirken antrenman listesini yükle
             LoadAntrenmanListesi();
+            LoadMusteriListesi();
         }
 
         private void LoadAntrenmanListesi()
@@ -45,34 +45,45 @@ namespace FitnessProje
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Antrenman listesi yüklenirken bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void AntrenorIslemleriForm_Load(object sender, EventArgs e)
-        {
-            // İlgili işlemler form yüklendiğinde burada yapılabilir.
-        }
-
-      
-        private void btnAntrenmanEkle_Click_1(object sender, EventArgs e)
+        private void LoadMusteriListesi()
         {
             try
             {
-                // Kullanıcının girdiği antrenman bilgilerini al
-                DateTime tarih = dateTimePickerTarih.Value.Date; // .Date kullanarak sadece tarihi alıyoruz
+                DataTable musteriListesi = antrenor.GetMusteriListesi();
+
+                if (musteriListesi != null)
+                {
+                    musteriDataGridView.DataSource = musteriListesi;
+                }
+                else
+                {
+                    MessageBox.Show("Müşteri listesi yüklenirken bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Müşteri listesi yüklenirken bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnAntrenmanEkle_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DateTime tarih = dateTimePickerTarih.Value.Date;
                 string aciklama = txtAciklama.Text;
 
-                // Antrenmanı eklemek için Antrenor sınıfındaki metodu çağır
-                bool eklemeBasarili = antrenor.AntrenmanEkle( tarih, aciklama);
+                bool eklemeBasarili = antrenor.AntrenmanEkle(tarih, aciklama);
 
                 if (eklemeBasarili)
                 {
                     MessageBox.Show("Antrenman başarıyla eklendi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Antrenman ekledikten sonra antrenman listesini güncelle
                     LoadAntrenmanListesi();
                 }
                 else
@@ -80,11 +91,42 @@ namespace FitnessProje
                     MessageBox.Show("Antrenman eklenirken bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Antrenman eklenirken bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        //...
+
+        private void DiyetAtaButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int selectedRowIndex = musteriDataGridView.SelectedCells[0].RowIndex;
+                int musteriID = Convert.ToInt32(musteriDataGridView.Rows[selectedRowIndex].Cells["MusteriID"].Value);
+
+                string diyetProgrami = DiyetTextBox.Text;
+
+                bool atamaBasarili = antrenor.DiyetAta(musteriID, diyetProgrami);
+
+                if (atamaBasarili)
+                {
+                    MessageBox.Show("Diyet atama işlemi başarılı.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadMusteriListesi();
+                }
+                else
+                {
+                    MessageBox.Show("Diyet atama sırasında bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Diyet atama sırasında bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AntrenorIslemleriForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

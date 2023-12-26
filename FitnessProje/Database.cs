@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,28 @@ namespace Fitness
             if (connection.State == System.Data.ConnectionState.Open)
                 connection.Close();
         }
+        // Database sınıfınıza GetAntrenmanListesi metodunu ekleyin
+        public DataTable GetAntrenmanListesi()
+        {
+            using (MySqlConnection connection = GetConnection())
+            {
+                OpenConnection(connection);
+
+                string query = "SELECT * FROM antrenmanlar";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                    {
+                        DataTable antrenmanTable = new DataTable();
+                        adapter.Fill(antrenmanTable);
+
+                        return antrenmanTable;
+                    }
+                }
+            }
+        }
+
     }
 }
 
