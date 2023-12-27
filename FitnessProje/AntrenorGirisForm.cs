@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
 using Fitness;
+using FitnessProje;
 
 namespace FitnessProje
+
 {
     public partial class AntrenorGirisForm : Form
     {
@@ -47,6 +49,13 @@ namespace FitnessProje
             {
                 MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void GeriButon2_Click(object sender, EventArgs e)
+        {
+            Anasayfa anasayfa = new Anasayfa();
+            anasayfa.Show();
+            this.Close();
         }
     }
 }

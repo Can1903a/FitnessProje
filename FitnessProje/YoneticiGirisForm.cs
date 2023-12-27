@@ -45,6 +45,13 @@ namespace Fitness
                 MessageBox.Show("Geçersiz kullanıcı adı veya şifre.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void GeriButon8_Click(object sender, EventArgs e)
+        {
+            Anasayfa anasayfa = new Anasayfa();
+            anasayfa.Show();
+            this.Close();
+        }
     }
 }
 

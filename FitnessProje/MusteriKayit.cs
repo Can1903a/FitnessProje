@@ -73,11 +73,11 @@ namespace FitnessProje
             }
         }
 
-        private void YasTextBox_TextChanged(object sender, EventArgs e)
+        private void GeriButon6_Click(object sender, EventArgs e)
         {
-
+            Anasayfa anasayfa = new Anasayfa();
+            anasayfa.Show();
+            this.Close();
         }
-
-
     }
 }

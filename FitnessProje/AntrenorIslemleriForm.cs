@@ -22,6 +22,27 @@ namespace FitnessProje
             LoadMusteriListesi();
         }
 
+        private void LoadMusteriListesi()
+        {
+            try
+            {
+                DataTable musteriListesi = antrenor.GetMusteriListesi();
+
+                if (musteriListesi != null)
+                {
+                    musteriDataGridView.DataSource = musteriListesi;
+                }
+                else
+                {
+                    MessageBox.Show("Müşteri listesi yüklenirken bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void LoadAntrenmanListesi()
         {
             try
@@ -51,29 +72,73 @@ namespace FitnessProje
             }
         }
 
-        private void LoadMusteriListesi()
+ 
+
+
+
+        private void AntrenorIslemleriForm_Load(object sender, EventArgs e)
         {
+            // Form yüklenirken yapılacak işlemler
+        }
+
+        private void DiyetAtaButton_Click(object sender, EventArgs e)
+        {
+
             try
             {
-                DataTable musteriListesi = antrenor.GetMusteriListesi();
+                int selectedRowIndex = musteriDataGridView.SelectedCells[0].RowIndex;
+                int musteriID = Convert.ToInt32(musteriDataGridView.Rows[selectedRowIndex].Cells["MusteriID"].Value);
 
-                if (musteriListesi != null)
+                string diyetProgramAdi = DiyetTextBox.Text;
+                string diyetProgramIcerik = diyetProgramIcerikRichTextBox.Text;
+
+                bool atamaBasarili = antrenor.DiyetAta(musteriID, diyetProgramAdi, diyetProgramIcerik);
+
+
+                if (atamaBasarili)
                 {
-                    musteriDataGridView.DataSource = musteriListesi;
+                    MessageBox.Show("Diyet atama işlemi başarılı.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // VKI'yi hesapla ve ekrana yazdır
+                    decimal vki = antrenor.CalculateVucutKitleIndeksi(musteriID);
+
+                    // VKI'yi ekrana yazdır
+                    VKILabel.Text = $"Vücut Kitle İndeksi: {vki}";
                 }
                 else
                 {
-                    MessageBox.Show("Müşteri listesi yüklenirken bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Diyet atama sırasında bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception)
             {
-                MessageBox.Show("Müşteri listesi yüklenirken bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("hata.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void btnAntrenmanEkle_Click(object sender, EventArgs e)
+
+        private void musteriDataGridView_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
+            try
+            {
+                int selectedRowIndex = musteriDataGridView.SelectedCells[0].RowIndex;
+                int musteriID = Convert.ToInt32(musteriDataGridView.Rows[selectedRowIndex].Cells["MusteriID"].Value);
+
+                // VKI'yi hesapla
+                decimal vki = antrenor.CalculateVucutKitleIndeksi(musteriID);
+
+                // VKI'yi ekrana yazdır
+                VKILabel.Text = $"Vücut Kitle İndeksi: {vki}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnAntrenmanEkle_Click_1(object sender, EventArgs e)
+        {
+
             try
             {
                 DateTime tarih = dateTimePickerTarih.Value.Date;
@@ -97,36 +162,12 @@ namespace FitnessProje
             }
         }
 
-        private void DiyetAtaButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                int selectedRowIndex = musteriDataGridView.SelectedCells[0].RowIndex;
-                int musteriID = Convert.ToInt32(musteriDataGridView.Rows[selectedRowIndex].Cells["MusteriID"].Value);
-
-                string diyetProgrami = DiyetTextBox.Text;
-
-                bool atamaBasarili = antrenor.DiyetAta(musteriID, diyetProgrami);
-
-                if (atamaBasarili)
-                {
-                    MessageBox.Show("Diyet atama işlemi başarılı.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadMusteriListesi();
-                }
-                else
-                {
-                    MessageBox.Show("Diyet atama sırasında bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Diyet atama sırasında bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void AntrenorIslemleriForm_Load(object sender, EventArgs e)
+        private void GeriButon_Click(object sender, EventArgs e)
         {
 
+            AntrenorGirisForm antrenorGirisForm = new AntrenorGirisForm(database, antrenor);
+            antrenorGirisForm.Show();
+            this.Close();
         }
     }
 }

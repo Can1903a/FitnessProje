@@ -98,7 +98,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AntrenmanProgrami.cs" />
+    <Compile Include="AnaSayfa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnaSayfa.Designer.cs">
+      <DependentUpon>AnaSayfa.cs</DependentUpon>
+    </Compile>
     <Compile Include="Antrenor.cs" />
     <Compile Include="AntrenorGirisForm.cs">
       <SubType>Form</SubType>
@@ -112,31 +117,25 @@
     <Compile Include="AntrenorIslemleriForm.Designer.cs">
       <DependentUpon>AntrenorIslemleriForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="BeslenmeEkleForm.cs">
+    <Compile Include="BeslenmeIslemleri.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BeslenmeEkleForm.Designer.cs">
-      <DependentUpon>BeslenmeEkleForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BeslenmeTakipForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BeslenmeTakipForm.Designer.cs">
-      <DependentUpon>BeslenmeTakipForm.cs</DependentUpon>
+    <Compile Include="BeslenmeIslemleri.Designer.cs">
+      <DependentUpon>BeslenmeIslemleri.cs</DependentUpon>
     </Compile>
     <Compile Include="Database.cs" />
     <Compile Include="MusteriAntrenmanKatilim.cs" />
+    <Compile Include="MusteriBilgiGuncelleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MusteriBilgiGuncelleForm.Designer.cs">
+      <DependentUpon>MusteriBilgiGuncelleForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MusteriIslem.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MusteriIslem.Designer.cs">
       <DependentUpon>MusteriIslem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FitnessProje.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FitnessProje.Designer.cs">
-      <DependentUpon>FitnessProje.cs</DependentUpon>
     </Compile>
     <Compile Include="Musteri.cs" />
     <Compile Include="MusteriGirisForm.cs">
@@ -166,23 +165,23 @@
     <Compile Include="YoneticiIslemleriForm.Designer.cs">
       <DependentUpon>YoneticiIslemleriForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AnaSayfa.resx">
+      <DependentUpon>AnaSayfa.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AntrenorGirisForm.resx">
       <DependentUpon>AntrenorGirisForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AntrenorIslemleriForm.resx">
       <DependentUpon>AntrenorIslemleriForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BeslenmeEkleForm.resx">
-      <DependentUpon>BeslenmeEkleForm.cs</DependentUpon>
+    <EmbeddedResource Include="BeslenmeIslemleri.resx">
+      <DependentUpon>BeslenmeIslemleri.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BeslenmeTakipForm.resx">
-      <DependentUpon>BeslenmeTakipForm.cs</DependentUpon>
+    <EmbeddedResource Include="MusteriBilgiGuncelleForm.resx">
+      <DependentUpon>MusteriBilgiGuncelleForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MusteriIslem.resx">
       <DependentUpon>MusteriIslem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FitnessProje.resx">
-      <DependentUpon>FitnessProje.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MusteriGirisForm.resx">
       <DependentUpon>MusteriGirisForm.cs</DependentUpon>

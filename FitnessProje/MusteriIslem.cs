@@ -39,6 +39,16 @@ namespace FitnessProje
         {
             LoadAntrenmanListesi();
 
+            DataTable diyetBilgileri = musteri.GetMusteriDiyetBilgileri();
+
+            if (diyetBilgileri != null)
+            {
+                dataGridViewDiyetBilgileri.DataSource = diyetBilgileri;
+            }
+            else
+            {
+                MessageBox.Show("Diyet bilgileri yüklenirken bir hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
 
         }
@@ -54,17 +64,9 @@ namespace FitnessProje
             return -1; // Seçili antrenman yoksa -1 döndür
         }
 
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            BeslenmeTakipForm beslenmeTakipForm = new BeslenmeTakipForm(database, musteri);
-            beslenmeTakipForm.Show();
-            this.Hide();
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
-            BeslenmeEkleForm beslenmeEkleForm = new BeslenmeEkleForm(database, musteri);
+            BeslenmeIslemleri beslenmeEkleForm = new BeslenmeIslemleri(database, musteri);
             beslenmeEkleForm.Show();
             this.Hide();
         }
@@ -96,6 +98,21 @@ namespace FitnessProje
             {
                 MessageBox.Show("Lütfen bir antrenman seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void GeriButon3_Click(object sender, EventArgs e)
+        {
+            MusteriGirisForm musteriGirisForm = new MusteriGirisForm(database, musteri);
+            musteriGirisForm.Show();
+            this.Close();
+        }
+
+        private void btnBilgiGuncelle_Click(object sender, EventArgs e)
+        {
+            MusteriBilgiGuncelleForm musteriBilgiGuncelleForm = new MusteriBilgiGuncelleForm(database, musteri);
+            musteriBilgiGuncelleForm.Show();
+            this.Close();
+
         }
     }
 }

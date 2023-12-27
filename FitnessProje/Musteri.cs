@@ -51,6 +51,116 @@ namespace FitnessProje
                 }
             }
         }
+
+        public bool DogrulaEskiSifre(string eskiSifre)
+        {
+            using (MySqlConnection connection = database.GetConnection())
+            {
+                database.OpenConnection(connection);
+
+                string query = "SELECT COUNT(*) FROM Musteriler WHERE MusteriID = @MusteriID AND Sifre = @EskiSifre";
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@MusteriID", this.MusteriID);
+                    cmd.Parameters.AddWithValue("@EskiSifre", eskiSifre);
+
+                    int count = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    return count > 0;
+                }
+            }
+        }
+        public DataTable GetMusteriDiyetBilgileri()
+        {
+            using (MySqlConnection connection = database.GetConnection())
+            {
+                database.OpenConnection(connection);
+
+                string query = "SELECT ProgramAdi, ProgramIcerik FROM diyetprogramlari WHERE MusteriID = @MusteriID";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@MusteriID", this.MusteriID);
+
+                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                    {
+                        DataTable diyetBilgileriTable = new DataTable();
+                        adapter.Fill(diyetBilgileriTable);
+
+                        return diyetBilgileriTable;
+                    }
+                }
+            }
+        }
+
+
+        public bool GuncelleMusteriSifre(string yeniSifre)
+        {
+            try
+            {
+                using (MySqlConnection connection = database.GetConnection())
+                {
+                    database.OpenConnection(connection);
+
+                    // TODO: Müşteri tablosundaki ilgili alanı güncelleme sorgusu yazın
+                    string query = "UPDATE Musteriler SET Sifre = @Sifre WHERE MusteriID = @MusteriID";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@Sifre", yeniSifre);
+                        cmd.Parameters.AddWithValue("@MusteriID", this.MusteriID);
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // TODO: Başarı durumunu döndür
+                    return true;
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show($"MySQL Hatası: {ex.Message}\nHata Kodu: {ex.ErrorCode}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        public bool GuncelleMusteriBilgileri(string yeniAd, string yeniSoyad, string yeniTelefon, string yeniEmail, string yeniAdres, int yeniYas, decimal yeniBoy, decimal yeniKilo)
+        {
+            try
+            {
+                using (MySqlConnection connection = database.GetConnection())
+                {
+                    database.OpenConnection(connection);
+
+                    // TODO: Müşteri tablosundaki ilgili alanları güncelleme sorgusu yazın
+                    string query = "UPDATE Musteriler SET Ad = @Ad, Soyad = @Soyad, Telefon = @Telefon, Email = @Email, Adres = @Adres, Yas = @Yas, Boy = @Boy, Kilo = @Kilo WHERE MusteriID = @MusteriID";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@Ad", yeniAd);
+                        cmd.Parameters.AddWithValue("@Soyad", yeniSoyad);
+                        cmd.Parameters.AddWithValue("@Telefon", yeniTelefon);
+                        cmd.Parameters.AddWithValue("@Email", yeniEmail);
+                        cmd.Parameters.AddWithValue("@Adres", yeniAdres);
+                        cmd.Parameters.AddWithValue("@Yas", yeniYas);
+                        cmd.Parameters.AddWithValue("@Boy", yeniBoy);
+                        cmd.Parameters.AddWithValue("@Kilo", yeniKilo);
+                        cmd.Parameters.AddWithValue("@MusteriID", this.MusteriID);
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // TODO: Başarı durumunu döndür
+                    return true;
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show($"MySQL Hatası: {ex.Message}\nHata Kodu: {ex.ErrorCode}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
         public bool KayitOl(string ad, string soyad, string tc, string telefon, string email, string adres, string sifre, int yas, decimal boy, decimal kilo)
         {
             try

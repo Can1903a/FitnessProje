@@ -51,7 +51,12 @@ namespace FitnessProje
             }
         }
 
-
+        private void GeriButon3_Click(object sender, EventArgs e)
+        {
+            Anasayfa anasayfa = new Anasayfa();
+            anasayfa.Show();
+            this.Close();
+        }
     }
 }
 

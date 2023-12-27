@@ -1,24 +1,42 @@
 ﻿using System;
+using System.Data;
 using System.Windows.Forms;
 using Fitness;
 using MySql.Data.MySqlClient;
 
 namespace FitnessProje
 {
-    public partial class BeslenmeEkleForm : Form
+    public partial class BeslenmeIslemleri : Form
     {
         private Database database;
         private Musteri musteri;
 
-        public BeslenmeEkleForm(Database db, Musteri musteriInstance)
+        public BeslenmeIslemleri(Database db, Musteri musteriInstance)
         {
             InitializeComponent();
             database = db;
 
             musteri = musteriInstance ?? new Musteri(database);
+            LoadBeslenmeBilgileri();
         }
 
 
+
+        private void LoadBeslenmeBilgileri()
+        {
+            try
+            {
+
+                DataTable beslenmeTable = musteri.GetMusteriBeslenmeBilgileri();
+
+
+                dataGridViewBeslenme.DataSource = beslenmeTable;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         private void YemekEkle()
         {
@@ -46,13 +64,7 @@ namespace FitnessProje
             this.DialogResult = DialogResult.OK;
             
         }
-
         private void BeslenmeEkleForm_Load(object sender, EventArgs e)
-        {
-            numericUpDownKalori.Maximum = 500;
-        }
-
-        private void numericUpDownKalori_ValueChanged(object sender, EventArgs e)
         {
 
         }
@@ -62,12 +74,22 @@ namespace FitnessProje
             try
             {
                 YemekEkle();
-                
+                LoadBeslenmeBilgileri();
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void GeriButon4_Click(object sender, EventArgs e)
+        {
+            MusteriIslem austeriIslem = new MusteriIslem(database, musteri);
+            austeriIslem.Show();
+            this.Close();
+        }
+
+
     }
 }
