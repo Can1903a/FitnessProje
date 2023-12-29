@@ -60,7 +60,10 @@ namespace FitnessProje
                 if (kayitBasarili)
                 {
                     MessageBox.Show("Kayıt işlemi başarılı.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close(); // Kayıt başarılıysa formu kapat
+                    this.Close();
+                    Anasayfa anasayfa = new Anasayfa();
+                    anasayfa.Show();
+                    this.Close();
                 }
                 else
                 {

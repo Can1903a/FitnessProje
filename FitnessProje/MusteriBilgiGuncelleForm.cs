@@ -85,7 +85,7 @@ namespace FitnessProje
                 }
 
                 // TODO: Musteri sınıfındaki şifre güncelleme yöntemini çağırın
-                bool sifreGuncellemeBasarili = musteri.GuncelleMusteriSifre(yeniSifre);
+                bool sifreGuncellemeBasarili = musteri.GuncelleMusteriSifre(eskiSifre, yeniSifre);
 
                 if (sifreGuncellemeBasarili)
                 {
@@ -110,6 +110,16 @@ namespace FitnessProje
             MusteriIslem musteriIslem = new MusteriIslem(database, musteri);
             musteriIslem.Show();
             this.Close();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Fitness;
 using FitnessProje;
@@ -67,5 +68,6 @@ namespace Fitness
         {
 
         }
+
     }
 }

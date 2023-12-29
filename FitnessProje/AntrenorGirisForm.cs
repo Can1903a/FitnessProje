@@ -57,5 +57,7 @@ namespace FitnessProje
             anasayfa.Show();
             this.Close();
         }
+
+
     }
 }

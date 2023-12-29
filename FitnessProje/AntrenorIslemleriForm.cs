@@ -78,7 +78,9 @@ namespace FitnessProje
 
         private void AntrenorIslemleriForm_Load(object sender, EventArgs e)
         {
-            // Form yüklenirken yapılacak işlemler
+           
+            dateTimePickerTarih.MinDate = DateTime.Now;
+            
         }
 
         private void DiyetAtaButton_Click(object sender, EventArgs e)

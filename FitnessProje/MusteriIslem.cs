@@ -114,5 +114,21 @@ namespace FitnessProje
             this.Close();
 
         }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+
+
+        private void btnodeme_Click(object sender, EventArgs e)
+        {
+            OdemeForm odemeForm = new OdemeForm(database, musteri);
+            odemeForm.Show();
+            this.Close();
+        }
+
+
     }
 }

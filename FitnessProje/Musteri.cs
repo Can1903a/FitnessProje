@@ -3,13 +3,18 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Windows.Forms;
+using static FitnessProje.Musteri;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace FitnessProje
 {
     public class Musteri
     {
         private Database database;
+        private Antrenor antrenor;
         private int musteriID;
+
+
 
         public int MusteriID
         {
@@ -17,14 +22,13 @@ namespace FitnessProje
             private set { musteriID = value; }
         }
 
-        public object Ad { get; internal set; }
-        public object Soyad { get; internal set; }
+        public string Ad { get; internal set; } // object yerine string olarak değiştirildi
+        public string Soyad { get; internal set; } // object yerine string olarak değiştirildi
 
         public Musteri(Database db)
         {
             database = db;
         }
-
         public bool GirisYap(string tc, string sifre)
         {
             using (MySqlConnection connection = database.GetConnection())
@@ -52,24 +56,123 @@ namespace FitnessProje
             }
         }
 
-        public bool DogrulaEskiSifre(string eskiSifre)
+
+
+    public decimal GetToplamGunlukKalori(DateTime tarih)
         {
             using (MySqlConnection connection = database.GetConnection())
             {
                 database.OpenConnection(connection);
 
-                string query = "SELECT COUNT(*) FROM Musteriler WHERE MusteriID = @MusteriID AND Sifre = @EskiSifre";
+                string query = "SELECT SUM(Kalori) FROM beslenme_bilgileri WHERE MusteriID = @MusteriID AND Tarih = @Tarih";
+
                 using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@MusteriID", this.MusteriID);
-                    cmd.Parameters.AddWithValue("@EskiSifre", eskiSifre);
+                    cmd.Parameters.AddWithValue("@Tarih", tarih.Date); // Sadece tarihi baz alarak filtreleme
 
-                    int count = Convert.ToInt32(cmd.ExecuteScalar());
+                    object result = cmd.ExecuteScalar();
 
-                    return count > 0;
+                    return (result == DBNull.Value) ? 0 : Convert.ToDecimal(result);
                 }
             }
         }
+        public DataTable GetMusteriBilgileri(int musteriID)
+        {
+            try
+            {
+                using (MySqlConnection connection = database.GetConnection())
+                {
+                    connection.Open();
+
+                    string query = "SELECT * FROM musteriler WHERE MusteriID = @MusteriID";
+                    using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@MusteriID", musteriID);
+
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                        {
+                            DataTable musteriBilgileriTable = new DataTable();
+                            adapter.Fill(musteriBilgileriTable);
+
+                            return musteriBilgileriTable;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        public decimal CalculateVucutKitleIndeksi(int musteriID)
+        {
+            try
+            {
+                using (MySqlConnection connection = database.GetConnection())
+                {
+                    connection.Open();
+
+                    // Müşteri bilgilerini al
+                    DataTable musteriBilgileri = GetMusteriBilgileri(musteriID);
+
+                    if (musteriBilgileri != null && musteriBilgileri.Rows.Count > 0)
+                    {
+                        double boy = Convert.ToDouble(musteriBilgileri.Rows[0]["Boy"]);
+                        double kilo = Convert.ToDouble(musteriBilgileri.Rows[0]["Kilo"]);
+
+                        double boyMetre = boy / 100.0;
+                        double vki = kilo / (boyMetre * boyMetre);
+
+                        return Convert.ToDecimal(vki);
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+        }
+        public decimal GetMusteriMaxGunlukKalori(int musteriID)
+        {
+            decimal vucutKitleIndeksi = CalculateVucutKitleIndeksi(musteriID);
+
+            decimal maxGunlukKalori = vucutKitleIndeksi * 75;
+
+            return maxGunlukKalori;
+        }
+
+        public bool DogrulaEskiSifre(string eskiSifre)
+        {
+            try
+            {
+                using (MySqlConnection connection = database.GetConnection())
+                {
+                    database.OpenConnection(connection);
+
+                    string query = "SELECT COUNT(*) FROM Musteriler WHERE MusteriID = @MusteriID AND Sifre = @EskiSifre";
+                    using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@MusteriID", this.MusteriID);
+                        cmd.Parameters.AddWithValue("@EskiSifre", eskiSifre);
+
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+
+                        return count > 0;
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show($"MySQL Hatası: {ex.Message}\nHata Kodu: {ex.ErrorCode}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
         public DataTable GetMusteriDiyetBilgileri()
         {
             using (MySqlConnection connection = database.GetConnection())
@@ -94,7 +197,7 @@ namespace FitnessProje
         }
 
 
-        public bool GuncelleMusteriSifre(string yeniSifre)
+        public bool GuncelleMusteriSifre(string eskiSifre, string yeniSifre)
         {
             try
             {
@@ -103,18 +206,19 @@ namespace FitnessProje
                     database.OpenConnection(connection);
 
                     // TODO: Müşteri tablosundaki ilgili alanı güncelleme sorgusu yazın
-                    string query = "UPDATE Musteriler SET Sifre = @Sifre WHERE MusteriID = @MusteriID";
+                    string query = "UPDATE Musteriler SET Sifre = @YeniSifre WHERE MusteriID = @MusteriID AND Sifre = @EskiSifre";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, connection))
                     {
-                        cmd.Parameters.AddWithValue("@Sifre", yeniSifre);
+                        cmd.Parameters.AddWithValue("@YeniSifre", yeniSifre);
+                        cmd.Parameters.AddWithValue("@EskiSifre", eskiSifre);
                         cmd.Parameters.AddWithValue("@MusteriID", this.MusteriID);
 
-                        cmd.ExecuteNonQuery();
-                    }
+                        int affectedRows = cmd.ExecuteNonQuery();
 
-                    // TODO: Başarı durumunu döndür
-                    return true;
+                        // Güncelleme başarılı oldu mu kontrol et
+                        return affectedRows > 0;
+                    }
                 }
             }
             catch (MySqlException ex)
@@ -147,11 +251,11 @@ namespace FitnessProje
                         cmd.Parameters.AddWithValue("@Kilo", yeniKilo);
                         cmd.Parameters.AddWithValue("@MusteriID", this.MusteriID);
 
-                        cmd.ExecuteNonQuery();
-                    }
+                        int affectedRows = cmd.ExecuteNonQuery();
 
-                    // TODO: Başarı durumunu döndür
-                    return true;
+                        // Güncelleme başarılı oldu mu kontrol et
+                        return affectedRows > 0;
+                    }
                 }
             }
             catch (MySqlException ex)
@@ -199,6 +303,38 @@ namespace FitnessProje
                 return false;
             }
         }
+
+        public bool OdemeYap(decimal odemeMiktari, string odemeTuru)
+        {
+            try
+            {
+                using (MySqlConnection connection = database.GetConnection())
+                {
+                    database.OpenConnection(connection);
+
+                    // Ödeme bilgilerini ekle
+                    string odemeEkleQuery = "INSERT INTO odeme_bilgileri (MusteriID, OdemeMiktari, OdemeTuru, OdemeTarihi) " +
+                                            "VALUES (@MusteriID, @OdemeMiktari, @OdemeTuru, @OdemeTarihi)";
+
+                    using (MySqlCommand cmd = new MySqlCommand(odemeEkleQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@MusteriID", this.MusteriID);
+                        cmd.Parameters.AddWithValue("@OdemeMiktari", odemeMiktari);
+                        cmd.Parameters.AddWithValue("@OdemeTuru", odemeTuru);
+                        cmd.Parameters.AddWithValue("@OdemeTarihi", DateTime.Now);
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    return true;
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show($"MySQL Hatası: {ex.Message}\nHata Kodu: {ex.ErrorCode}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
         public DataTable GetMusteriBeslenmeBilgileri()
         {
             using (MySqlConnection connection = database.GetConnection())
@@ -221,11 +357,42 @@ namespace FitnessProje
                 }
             }
         }
+        public DataTable GetOdemeBilgileri()
+        {
+            try
+            {
+                using (MySqlConnection connection = database.GetConnection())
+                {
+                    database.OpenConnection(connection);
 
+                    string query = "SELECT * FROM odeme_bilgileri WHERE MusteriID = @MusteriID";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@MusteriID", this.MusteriID);
+
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                        {
+                            DataTable odemeBilgileriTable = new DataTable();
+                            adapter.Fill(odemeBilgileriTable);
+
+                            return odemeBilgileriTable;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+    }
+
+    
 
        
-    }
 }
+
 
 
 

@@ -122,6 +122,17 @@ namespace Fitness
             yoneticiGirisForm.Show();
             this.Close();
         }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btnMusteri_Click(object sender, EventArgs e)
+        {
+            MusteriListesiForm musteriListesiForm = new MusteriListesiForm(database);
+            musteriListesiForm.Show();
+        }
     }
 }
 
